@@ -1,0 +1,223 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	background-color: #404040;
+	margin: 0 0 100px;
+    /* bottom = footer height */
+    padding: 25px;
+}
+
+h1 {
+	font-family: "Helvetica";
+	font-size: 50px;
+	font-weight: 100;
+	color: white;
+	text-align: left;
+}
+
+h2 {
+	font-family: "Helvetica";
+	font-size: 40px;
+	font-weight: 100;
+	color: white;
+	text-align: left;
+}
+
+h3 {
+	font-family: "Helvetica";
+	font-size: 30px;
+	font-weight: 100;
+	color: white;
+	text-align: left;
+	padding-left: 50px;
+}
+
+h4 {
+	font-family: "Helvetica";
+	font-size: 20px;
+	font-weight: 100;
+	color: white;
+}
+
+h5 {
+	font-family: "Helvetica";
+	font-size: 15px;
+	font-weight: 100;
+	color: white;
+}
+
+h6 {
+	font-family: "Helvetica";
+	font-size: 10px;
+	font-weight: 100;
+	color: white;
+}
+
+p {
+	font-family: "Helvetica";
+	font-size: 15px;
+	font-weight: 100;
+	color: white;
+}
+
+a {
+	font-weight: 100;
+}
+
+textarea {
+	resize: none;
+}
+
+footer {
+	text-align: center;
+	padding: 3px;
+	color: white;
+	position: absolute;
+	left: 0;
+    bottom: 0;
+    height: 100px;
+    width: 100%;
+}
+
+ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	background-color: #FE9801;
+}
+
+li {
+	float: left;
+}
+
+li p {
+	padding: 0px;
+	margin: 0px;
+	border: 0px;
+	font-family: "Helvetica";
+	font-size: 14px;
+	position: absolute;
+	right: 30px;
+}
+
+li a, .dropbtn {
+	display: inline-block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-family: "Helvetica";
+	font-size: 20px;
+}
+
+.dropbtnSelected {
+	display: inline-block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+	font-family: "Helvetica";
+	font-size: 20px;
+	background-color: #CB7A01;
+}
+
+li a:hover, dropdown:hover .dropbtn {
+	background-color: #FDC168;
+}
+
+li.dropdown {
+	display: inline-block;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+th, td {
+	font-family: "Helvetica";
+	font-size: 16px;
+	color: white;
+	padding: 10px;
+}
+
+/* Solid border */
+hr.solid {
+	border-top: 3px solid #bbb;
+}
+
+/* Dropdown Content (Hidden by Default) */
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+	z-index: 1;
+}
+
+/* Links inside the dropdown */
+.dropdown-content a {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+	text-align: left;
+}
+
+/* Change color of dropdown links on hover */
+.dropdown-content a:hover {
+	background-color: #f1f1f1
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-content {
+	display: block;
+}
+
+/* use this class for basic formatting */
+.paragraph {
+	padding: 50px;
+}
+
+/* use this class for received messages */
+.receivedMessages {
+	background-color: #D9D9D9;
+	width: max-content;
+	padding: 10px;
+	color: black;
+}
+
+/* use this class for sent messages */
+.sentMessages {
+	background-color: #2AA22A;
+	width: max-content;
+	padding: 10px;
+}
+
+.lunaRows:nth-child(odd) {
+    background: rgb(10, 10, 10);
+}
+
+.lunaRows:nth-child(even) {
+    background: rgb(38, 38, 38);
+}
+
+.selected {
+	background: rgb(48, 109, 178);
+}
+
+.selectedNav {
+	background-color: #CB7A01;
+}
+
+/* modify the conversation table based on ID so that it's always visible */
+#conversationTable {
+	position: sticky;
+	top: 0;
+	left: 0;
+    bottom: 0;
+}

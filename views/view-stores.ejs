@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>JSRascal - view stores</title>
+		<link rel="stylesheet" type="text/css" href="/css/styles.css" />
+
+		<script>
+			function search() {
+				//get the select filterOption
+				const filterOption = document.getElementById("filterOption");
+				const selectedOption = filterOption.options[filterOption.selectedIndex].value;
+
+				//get the value in the search input
+				let searchParam = document.getElementById('searchParam').value;
+				//trim any leading and trailing whitespace
+				searchParam = searchParam.trim();
+
+				//determine the query string. If user is searching based on storeName, find the storeNumber from the array
+				let queryString = '';
+				if (selectedOption === 'storeName') {
+					queryString = 'storeName=' + searchParam;
+				} else {
+					queryString = 'storeNumber=' + searchParam;
+				}
+
+				location.href = "/view-stores.html?" + queryString;
+			}
+
+			function isNumberKey(event) {
+				//get the charCode
+				let charCode = (event.which) ? event.which : event.keyCode;
+				//is charCode ENTER?
+				if (charCode === 13) {
+					//import totalStores text
+					const totalStores = <%- totalStores %>;
+					//convert to decimal pages
+					const decimalPages = totalStores / 50;
+					//round up for totalPages whole number
+					const totalPages = Math.ceil(decimalPages);
+					//get the value in the page number input
+					let pageNo = document.getElementById('pageNo').value;
+					//trim any leading and trailing whitespace
+					pageNo = pageNo.trim();
+					//convert to an integer
+					let number = Number(pageNo);
+					//handle incorrect input
+					if (number < 1) number = 1;
+					if (number > totalPages) number = totalPages;
+					location.href = "/view-stores.html?" + 'pageNo=' + number.toString();
+					return false;
+				}
+
+				if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+					return false;
+				}
+
+				return true;
+			}
+		</script>
+	</head>
+	<body>
+		<nav>
+			<ul>
+				<li><a href="view-stores.html" class="dropbtnSelected">Stores</a></li>
+		  	  	<li><a href="logout.html">Logout</a></li>
+			</ul>
+		</nav>
+
+		<table style="width: 25%; margin-top: 20px;">
+			<tr>
+				<td>
+					<select id="filterOption">
+						<% if (filterStoreName !== null && typeof filterStoreName !== 'undefined') { %>
+						<option value="storeName" selected>Store name</option>
+						<option value="storeNumber">Store number</option>
+						<% } else { %>
+						<option value="storeNumber" selected>Store number</option>
+						<option value="storeName">Store name</option>
+						<% } %>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td><input type="text" id="searchParam" style="width:100px;"></input></td>
+			</tr>
+			<tr>
+				<td><button type="button" onclick="search();">Search</button></td>
+			</tr>
+		</table>
+
+		<table id="storeTable" style="width: 100%; margin-top: 20px">
+		  	<tr>
+		    	<th style="text-align:left">Store number</th>
+		    	<th style="text-align:left">Store name</th>
+		    	<th style="text-align:left">INI file</th>
+		  	</tr>
+		  	<tr class="lunaRows">
+		  		<form action="/add-store.html" method="POST">
+			  		<td><input type="text" name="storeNumber" style="width:100px;"></input></td>
+		  			<td><input type="text" name="storeName" style="width:100px;"></input></td>
+		  			<td><input type="file" name="file" id="file"></input></td>
+		  			<td><button type="submit">Add</button></td>
+		  			<td>
+			  			<input type="text" name="fileContents" id="fileContents" style="visibility: hidden; width: 0px; length: 0px;">
+			  		</td>
+		  		</form>
+		  	</tr>
+		  	<% let noOfRows = 0; %>
+		  	<% stores.forEach(function(store) { %>
+		  	<% if (noOfRows < 50) { %>
+		  	<tr class="lunaRows">
+		  		<form action="/delete-store.html" method="POST">
+		  			<td><%= store.storeNumber %></td>
+		  			<td><%= store.storeName %></td>
+		  			<td><%= store.iniFile %></td>
+		  			<td><button type="submit">Delete</button></td>
+		  			<td>
+		  				<input type="text" name="storeNumber" value="<%= store.storeNumber %>" style="visibility: hidden; width: 0px; length: 0px;">
+		  	  		</td>
+		  		</form>
+		  	</tr>
+		  	<% noOfRows++; %>
+		  	<% } %>
+		  	<% }) %>
+		</table>
+
+		<table style="width: 100%; margin-top: 20px;">
+			<tr>
+				<td>
+					Records 
+					<%= startingRow %>
+					-
+					<%= endingRow %>
+					 of 
+					<%= totalStores %>
+				</td>
+				<td>
+					Page <input type="text" name="pageNo" id="pageNo" value="<%= pageNo %>" onkeypress="return isNumberKey(event)">
+					<% const total = totalStores; %>
+					<% const decimalPages = total / 50; %>
+					<% const totalPages = Math.ceil(decimalPages); %> 
+					of <%= totalPages %>
+				</td>
+			</tr>
+		</table>
+
+		<footer>
+			<hr class="solid">
+			<h6>Copyright © 2023<br>2.0.0<br>Powered by software developed by Mobilis Consulting Ltd.</h6>
+		</footer>
+
+		<script>
+			let file = document.getElementById("file");
+			file.addEventListener("change", handleFiles, false);
+
+			function handleFiles() {
+  				const fileList = this.files;
+  				let fileUrl = URL.createObjectURL(fileList[0]);
+
+  				let rawFile = new XMLHttpRequest();
+  				rawFile.open("GET", fileUrl, false);
+  				rawFile.onreadystatechange = function () {
+  				    if(rawFile.readyState === 4)  {
+  				      	if(rawFile.status === 200 || rawFile.status == 0) {
+  				        	const allText = rawFile.responseText;
+  				        	let fileContents = document.getElementById("fileContents");
+  				        	fileContents.value = allText;
+  				        	URL.revokeObjectURL(fileUrl);
+  				       	}
+  				    }
+  				}
+  				rawFile.send(null);
+			}
+		</script>
+	</body>
+</html>
