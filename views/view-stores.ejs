@@ -15,9 +15,14 @@
 				//trim any leading and trailing whitespace
 				searchParam = searchParam.trim();
 
-				//determine the query string. If user is searching based on storeName, find the storeNumber from the array
+				//determine the query string
 				let queryString = '';
 				if (selectedOption === 'storeName') {
+					if (searchParam.length < 3) {
+						alert("Please enter at least 3 characters.");
+						return;
+					}
+					
 					queryString = 'storeName=' + searchParam;
 				} else {
 					queryString = 'storeNumber=' + searchParam;
@@ -63,6 +68,9 @@
 			<ul>
 				<li><a href="view-stores.html" class="dropbtnSelected">Stores</a></li>
 		  	  	<li><a href="logout.html">Logout</a></li>
+		  	  	<li>
+		  	  		<p>Username: <b><%= user.username %></b></p><br>
+		  	  	</li>
 			</ul>
 		</nav>
 
@@ -146,7 +154,7 @@
 
 		<footer>
 			<hr class="solid">
-			<h6>Copyright © 2023<br>2.0.0<br>Powered by software developed by Mobilis Consulting Ltd.</h6>
+			<h6>Copyright © 2023<br>3.0.0<br>Powered by software developed by Mobilis Consulting Ltd.</h6>
 		</footer>
 
 		<script>

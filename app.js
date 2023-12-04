@@ -165,6 +165,7 @@ function addStore(storeNumber, storeName, file, fileContents, callback) {
 		        storeNumber: storeNumber,
 		        storeName: storeName,
 		        iniFile: file,
+		        searchTag: storeName.replace(/\s/g, '').toLowerCase(),
 		    },
 		};
 
@@ -198,6 +199,25 @@ function filterStores(stores, pageNo) {
 	return filteredStores;
 }
 
+function sortStores(stores) {
+	stores.sort((a, b) => {
+		const comp1 = Number(a.storeNumber);
+		const comp2 = Number(b.storeNumber);
+
+		if (comp1 > comp2) {
+			return 1;
+		}
+
+		if (comp1 < comp2) {
+			return -1;
+		}
+
+		return 0;
+	});
+
+	return stores;
+}
+
 //webpage loading methods
 function loadViewStoresPage(req, res) {
 	let params = {
@@ -213,12 +233,12 @@ function loadViewStoresPage(req, res) {
     		":storeNumber": req.query.storeNumber,
     	};
 	} else if (objValid(req.query.storeName)) {
-		params['FilterExpression'] = '#storeName = :storeName';
+		params['FilterExpression'] = 'begins_with(#searchTag, :searchTag)';
 		params['ExpressionAttributeNames'] = {
-        	"#storeName": "storeName",
+        	"#searchTag": "searchTag",
     	};
 		params['ExpressionAttributeValues'] = {
-    		":storeName": req.query.storeName,
+    		":searchTag": req.query.storeName.replace(/\s/g, '').toLowerCase(),
     	};
 	}
 
@@ -234,7 +254,7 @@ function loadViewStoresPage(req, res) {
         	//contacts OK, now show screen
 			res.render("view-stores", {
         		user: req.user,
-	        	stores: filterStores(stores, pageNo),
+	        	stores: filterStores(sortStores(stores), pageNo),
 	        	filterStoreNumber: req.query.storeNumber,
 	        	filterStoreName: req.query.storeName,
 	        	pageNo: stores.length === 0 ? 0 : pageNo,
